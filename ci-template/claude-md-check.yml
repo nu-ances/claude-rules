@@ -1,9 +1,6 @@
 # Template CI — à copier dans .github/workflows/ de chaque repo nu-ances.
 # Vérifie que le bloc commun du CLAUDE.md n'a pas dérivé de nu-ances/claude-rules.
-#
-# Prérequis : un secret `CLAUDE_RULES_TOKEN` (PAT/App fine-grained, lecture sur
-# nu-ances/claude-rules) — OU rendre nu-ances/claude-rules public et retirer la
-# ligne `token:` ci-dessous.
+# (nu-ances/claude-rules est public → checkout sans token.)
 name: CLAUDE.md — bloc commun
 on:
   pull_request:
@@ -20,6 +17,5 @@ jobs:
         with:
           repository: nu-ances/claude-rules
           path: .claude-rules-src
-          token: ${{ secrets.CLAUDE_RULES_TOKEN }}
       - name: Vérifier le bloc commun
         run: python3 .claude-rules-src/sync-claude-md.py --check-one CLAUDE.md
