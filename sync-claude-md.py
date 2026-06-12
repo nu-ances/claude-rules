@@ -72,11 +72,35 @@ def render(existing: str | None) -> str:
     return f"{block}\n\n{tail}\n"
 
 
+def check_one(claude_md: Path, canonical: str) -> int:
+    """Vérifie un seul CLAUDE.md (mode CI : un repo isolé, hors conteneur)."""
+    if not claude_md.exists():
+        print(f"✗ {claude_md} — ABSENT")
+        return 1
+    block = extract_block(claude_md.read_text(encoding="utf-8"))
+    if block is None:
+        print(f"✗ {claude_md} — pas de marqueurs COMMON")
+        return 1
+    if block != canonical:
+        print(f"✗ {claude_md} — bloc commun DÉRIVÉ (lancer sync-claude-md.py)")
+        return 1
+    print(f"✓ {claude_md}")
+    return 0
+
+
 def main() -> int:
     mode = sys.argv[1] if len(sys.argv) > 1 else "--write"
     # Filtre optionnel : ne traiter que les cibles dont le chemin commence par cet argument.
     filt = sys.argv[2] if len(sys.argv) > 2 else None
     canonical = COMMON_FILE.read_text(encoding="utf-8").strip()
+
+    # Mode CI : vérifie un fichier explicite, sans dépendre de la structure conteneur.
+    if mode == "--check-one":
+        if not filt:
+            print("usage: sync-claude-md.py --check-one <chemin/CLAUDE.md>")
+            return 2
+        return check_one(Path(filt), canonical)
+
     drift = 0
 
     for path in targets():

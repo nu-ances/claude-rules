@@ -40,7 +40,12 @@ Référence complète (si accessible) : `docs/gcp/security-policy.md`.
 - En cas de doute sur la conformité : exécuter `docs/gcp/scripts/verify-security-baseline.sh`.
 <!-- COMMON:END -->
 
-## Règles spécifiques à ce repo
+## Règles spécifiques à ce repo (`claude-rules`)
 
-_(à compléter)_
+- **Source de vérité** des règles communes. Pour modifier une règle commune :
+  éditer `common.md` puis `python3 sync-claude-md.py` (propage partout).
+- Le bloc commun ci-dessus est **lui-même généré** (auto-référence) — ne pas
+  l'éditer directement.
+- Repo volontairement **non sensible** : son contenu doit rester sûr à diffuser
+  largement (la CI de chaque repo le lit).
 
