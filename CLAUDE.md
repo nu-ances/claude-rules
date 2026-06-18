@@ -31,13 +31,15 @@ IAM, secrets ou accès :
 - **Toute ressource GCP existe dans `nuances-gcp-iac`** (Terraform) — pas de
   création manuelle non importée.
 
-Référence complète (si accessible) : `docs/gcp/security-policy.md`.
+Référence complète (si accessible) : `docs/security/README.md`.
 
 ## Conventions de travail
 
 - Le français est la langue de travail du groupe.
 - Commits/PRs : ne jamais committer ni pousser sans demande explicite.
-- En cas de doute sur la conformité : exécuter `docs/gcp/scripts/verify-security-baseline.sh`.
+- En cas de doute sur la conformité : exécuter les audits indexés dans
+  `docs/security/README.md` (`verify-security-baseline.sh` pour GCP,
+  `verify-github-baseline.sh` pour GitHub).
 <!-- COMMON:END -->
 
 ## Règles spécifiques à ce repo (`claude-rules`)
