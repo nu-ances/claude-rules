@@ -1,0 +1,55 @@
+# Template CI — à copier dans .github/workflows/ des repos nu-ances de niveau `prod`.
+# Garantit qu'une PR porte une déclaration de conformité résolue avant merge.
+# Niveau du repo lu dans `.nuances.yml` (clé `niveau:`). Si != prod → skip non bloquant.
+# Pur bash + grep, zéro action tierce (comme claude-md-check.yml).
+name: Conformité — déclaration de plan
+on:
+  pull_request:
+  workflow_dispatch:
+jobs:
+  conformity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Vérifier la déclaration de conformité
+        run: |
+          set -euo pipefail
+
+          # 1. Niveau du repo. Absent / non-prod → gate inactif (cf. ADR 012, défaut sûr = dev).
+          niveau="dev"
+          if [ -f .nuances.yml ]; then
+            niveau="$(grep -E '^\s*niveau\s*:' .nuances.yml | head -n1 | sed -E 's/^\s*niveau\s*:\s*//' | tr -d '[:space:]')"
+          fi
+          if [ "$niveau" != "prod" ]; then
+            echo "Repo niveau '$niveau' — gate de conformité inactif (prod uniquement)."
+            exit 0
+          fi
+          echo "Repo niveau 'prod' — déclaration de conformité requise."
+
+          # 2. PLAN.md doit exister à la racine.
+          if [ ! -f PLAN.md ]; then
+            echo "::error::Repo prod : PLAN.md requis à la racine (copier docs/patterns/PLAN.template.md)."
+            exit 1
+          fi
+
+          # 3. Déclaration de statut résolue (CONFORME ou NON CONFORME).
+          if ! grep -qE '^\s*Statut\s*:\s*(✅ CONFORME|⚠️ NON CONFORME)' PLAN.md; then
+            echo "::error::Déclaration de conformité absente dans PLAN.md (ligne 'Statut : ✅ CONFORME' ou '⚠️ NON CONFORME')."
+            exit 1
+          fi
+
+          # 4. Si NON CONFORME : au moins une ligne de dérogation REMPLIE (pas le gabarit vide).
+          if grep -qE '^\s*Statut\s*:\s*⚠️ NON CONFORME' PLAN.md; then
+            # Lignes de tableau (commencent par '|'), hors en-tête et séparateur ;
+            # on retire pipes + espaces : s'il reste un caractère, une cellule est remplie.
+            if ! grep -E '^\s*\|' PLAN.md \
+                 | grep -vE '^\s*\|\s*(Contrôle dérogé|-+)' \
+                 | sed -E 's/[|[:space:]]//g' \
+                 | grep -q '.'; then
+              echo "::error::NON CONFORME déclaré mais tableau de dérogation vide (contrôle dérogé / motif / risque)."
+              exit 1
+            fi
+            echo "NON CONFORME documenté — la validation explicite humaine passe par l'approbation de PR."
+          fi
+
+          echo "Déclaration de conformité présente ✅"
