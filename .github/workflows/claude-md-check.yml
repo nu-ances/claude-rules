@@ -1,0 +1,21 @@
+# Template CI — à copier dans .github/workflows/ de chaque repo nu-ances.
+# Vérifie que le bloc commun du CLAUDE.md n'a pas dérivé de nu-ances/claude-rules.
+# (nu-ances/claude-rules est public → checkout sans token.)
+name: CLAUDE.md — bloc commun
+on:
+  pull_request:
+  schedule:
+    - cron: "0 6 * * 1" # lundi 06:00 UTC — attrape les dérives introduites côté source
+  workflow_dispatch:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Récupérer la source des règles communes
+        uses: actions/checkout@v4
+        with:
+          repository: nu-ances/claude-rules
+          path: .claude-rules-src
+      - name: Vérifier le bloc commun
+        run: python3 .claude-rules-src/sync-claude-md.py --check-one CLAUDE.md
