@@ -1,0 +1,3 @@
+# Niveau du repo — pilote les standards de gouvernance (ADR 012 / ADR 013).
+# Doit rester cohérent avec le champ `niveau` de repos.tf (nuances-github-iac).
+niveau: prod
