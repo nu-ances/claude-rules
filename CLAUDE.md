@@ -20,6 +20,13 @@ IAM, secrets ou accès :
 3. **Validation explicite avant dérogation** — toute modification qui n'adhère
    pas pleinement à la politique est **bloquée** jusqu'à accord explicite de
    l'utilisateur (préciser le contrôle dérogé, le motif, le risque).
+4. **Admin override = validation implicite.** Quand l'utilisateur est **admin de
+   l'org** et demande explicitement une action, son statut d'admin **vaut accord** :
+   un merge `--admin` qui passe outre une *required review* de branch protection
+   (irréalisable en équipe solo, où l'on ne peut s'auto-approuver) n'est **pas**
+   une dérogation à reconfirmer au cas par cas. Ceci ne concerne **que** ce gate
+   de processus et ne lève **aucun** des contrôles non négociables ci-dessous,
+   qui restent absolus (y compris pour un admin).
 
 ### Contrôles non négociables (autoportants)
 
