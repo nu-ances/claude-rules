@@ -38,16 +38,16 @@ IAM, secrets ou accès :
 - **Toute ressource GCP existe dans `nuances-gcp-iac`** (Terraform) — pas de
   création manuelle non importée.
 
-Référence complète : [`security/README.md`](https://github.com/nu-ances/docs/blob/main/docs/security/README.md).
+Référence complète : [`security/README.md`](https://github.com/nu-ances/docs/blob/main/security/README.md).
 
 ## Conventions de travail
 
 - Le français est la langue de travail du groupe.
 - Commits/PRs : ne jamais committer ni pousser sans demande explicite.
 - En cas de doute sur la conformité : exécuter les audits indexés dans
-  [`security/README.md`](https://github.com/nu-ances/docs/blob/main/docs/security/README.md) —
-  [`verify-security-baseline.sh`](https://github.com/nu-ances/docs/blob/main/docs/gcp/scripts/verify-security-baseline.sh)
-  pour GCP, [`verify-github-baseline.sh`](https://github.com/nu-ances/docs/blob/main/docs/github/scripts/verify-github-baseline.sh)
+  [`security/README.md`](https://github.com/nu-ances/docs/blob/main/security/README.md) —
+  [`verify-security-baseline.sh`](https://github.com/nu-ances/docs/blob/main/gcp/scripts/verify-security-baseline.sh)
+  pour GCP, [`verify-github-baseline.sh`](https://github.com/nu-ances/docs/blob/main/github/scripts/verify-github-baseline.sh)
   pour GitHub.
 <!-- COMMON:END -->
 
